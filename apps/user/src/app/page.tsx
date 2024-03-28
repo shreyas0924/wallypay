@@ -1,21 +1,12 @@
-"use client";
-
-import { useBalance } from "@repo/store";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-
-export default function Page() {
-  const balance = useBalance();
-  const { data: session, status } = useSession();
-
+'use client';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { Appbar } from '@repo/ui/components/appbar';
+export default function Page(): JSX.Element {
+  const session = useSession();
   return (
-    <div className="text-center text-2xl flex gap-4 justify-center align-middle m-4">
-      <div>Balance : {balance}</div>
-      {status === "authenticated" ? (
-        <div>Hello {session.user?.name}</div>
-      ) : (
-        <Link href="/api/auth/signin">Sign In</Link>
-      )}
+    <div>
+      <Appbar onSignin={signIn} onSignout={signOut} user={session.data?.user} />
+      <h1>Hello {session.data?.user?.name}</h1>
     </div>
   );
 }

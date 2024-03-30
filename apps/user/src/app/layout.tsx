@@ -19,12 +19,10 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={inter.className}>
-        <div className='max-w-7xl mx-auto'>
-          <Providers>
-            <AppbarClient />
-            {children}
-          </Providers>
-        </div>
+        <Providers>
+          <AppbarClient />
+          <div className='max-w-7xl mx-auto'>{children}</div>
+        </Providers>
       </body>
     </html>
   );

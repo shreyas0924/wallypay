@@ -1,7 +1,20 @@
 'use client';
 import { Button } from '@repo/ui/components/ui/button';
-import { Card } from '@repo/ui/components/ui/card';
-import { Select } from '@repo/ui/components/ui/select';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@repo/ui/components/ui/card';
+import {
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectShad,
+  SelectTrigger,
+  SelectValue,
+} from '@repo/ui/components/ui/select-shad';
 import { TextInput } from '@repo/ui/components/ui/TextInput';
 import { useState } from 'react';
 import { createOnRampTransaction } from '../lib/actions/createOnRampTxn';
@@ -10,6 +23,7 @@ const SUPPORTED_BANKS = [
   {
     name: 'HDFC Bank',
     redirectUrl: 'https://netbanking.hdfcbank.com',
+    //we have to connect to our webhook instead of netbanking url
   },
   {
     name: 'Axis Bank',
@@ -25,40 +39,55 @@ export const AddMoney = () => {
   const [value, setValue] = useState(0);
   return (
     <Card title='Add Money'>
-      <div className='w-full'>
+      <CardHeader>
+        <CardTitle>Add Money to Wallet</CardTitle>
+      </CardHeader>
+      <CardContent>
         <TextInput
           label={'Amount'}
           placeholder={'Amount'}
           onChange={(val) => {
             setValue(Number(val));
           }}
+          type='number'
         />
-        <div className='py-4 text-left'>Bank</div>
-        <Select
-          onSelect={(value) => {
-            setRedirectUrl(
-              SUPPORTED_BANKS.find((x) => x.name === value)?.redirectUrl || ''
-            );
-            setProvider(
-              SUPPORTED_BANKS.find((x) => x.name === value)?.name || ''
-            );
-          }}
-          options={SUPPORTED_BANKS.map((x) => ({
-            key: x.name,
-            value: x.name,
-          }))}
-        />
-        <div className='flex justify-center pt-4'>
-          <Button
-            onClick={async () => {
-              await createOnRampTransaction(provider, value);
-              window.location.href = redirectUrl || '';
+      </CardContent>
+      <CardContent>
+        <div className='text-left'>Bank</div>
+        <SelectShad>
+          <SelectTrigger className='w-[180px]'>
+            <SelectValue placeholder='Select Bank' />
+          </SelectTrigger>
+          <SelectContent
+            onSelect={(value: string) => {
+              setRedirectUrl(
+                SUPPORTED_BANKS.find((x) => x.name === value)?.redirectUrl || ''
+              );
+              setProvider(
+                SUPPORTED_BANKS.find((x) => x.name === value)?.name || ''
+              );
             }}
           >
-            Add Money
-          </Button>
-        </div>
-      </div>
+            <SelectGroup>
+              {SUPPORTED_BANKS.map((x) => (
+                <SelectItem key={x.name} value={x.name}>
+                  {x.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </SelectShad>
+      </CardContent>
+      <CardFooter>
+        <Button
+          onClick={async () => {
+            await createOnRampTransaction(provider, value);
+            window.location.href = redirectUrl || '';
+          }}
+        >
+          Add Money
+        </Button>
+      </CardFooter>
     </Card>
   );
 };

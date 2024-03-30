@@ -14,10 +14,12 @@ export const Select = ({
       onChange={(e) => {
         onSelect(e.target.value);
       }}
-      className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
+      className='bg-transparent border border-gray-300  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-50'
     >
       {options.map((option) => (
-        <option value={option.key}>{option.value}</option>
+        <option value={option.key} className='bg-transparent text-black py-4'>
+          {option.value}
+        </option>
       ))}
     </select>
   );

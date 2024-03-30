@@ -17,14 +17,14 @@ export const SidebarItem = ({
 
   return (
     <div
-      className={`flex ${selected ? 'text-[#6a51a6]' : 'text-slate-500'} cursor-pointer  py-2`}
+      className={`flex ${selected ? 'dark:text-gray-300 text-gray-800' : 'text-slate-500'} cursor-pointer  py-2`}
       onClick={() => {
         router.push(href);
       }}
     >
       <div className='pr-2'>{icon}</div>
       <div
-        className={`font-bold ${selected ? 'text-[#6a51a6]' : 'text-slate-500'}`}
+        className={`font-bold ${selected ? 'dark:text-gray-300 text-gray-800' : 'text-slate-500'}`}
       >
         {title}
       </div>

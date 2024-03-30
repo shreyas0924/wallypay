@@ -6,13 +6,11 @@ export default function Page(): JSX.Element {
   const session = useSession();
   return (
     <div className=''>
-      <Appbar
-        onSignin={signIn}
-        onSignout={signOut}
-        user={session.data?.user}
-        name='Paytm'
-      />
-      <h1>Hello {session.data?.user?.name}</h1>
+      {session ? (
+        <h1>Hello {session.data?.user?.name}</h1>
+      ) : (
+        <h1>Please Signin</h1>
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import '@repo/ui/globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Providers } from './providers';
+import { AppbarClient } from '../components/appbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,7 +20,10 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className={inter.className}>
         <div className='max-w-7xl mx-auto'>
-          <Providers>{children}</Providers>
+          <Providers>
+            <AppbarClient />
+            {children}
+          </Providers>
         </div>
       </body>
     </html>

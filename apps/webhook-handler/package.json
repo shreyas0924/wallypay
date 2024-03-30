@@ -1,0 +1,21 @@
+{
+  "name": "webhook-handler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "pnpm dlx esbuild ./src/index.ts --bundle --platform=node --outfile=dist/index.js",
+    "start": "node dist/index.js",
+    "dev": "npm run build && npm run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@repo/database": "workspace:*",
+    "@types/express": "^4.17.21",
+    "esbuild": "^0.20.2",
+    "express": "^4.19.2",
+    "zod": "^3.22.4"
+  }
+}

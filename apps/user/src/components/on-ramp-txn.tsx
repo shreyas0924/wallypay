@@ -5,7 +5,9 @@ import {
   CardTitle,
 } from '@repo/ui/components/ui/card';
 import { Badge } from '@repo/ui/components/ui/badge';
-
+import { Button } from '@repo/ui/components/ui/button';
+import { MoveUpRight } from 'lucide-react';
+import Link from 'next/link';
 type StatusType = 'Success' | 'Failure' | 'Processing';
 
 export const OnRampTransactions = ({
@@ -33,29 +35,37 @@ export const OnRampTransactions = ({
       </CardHeader>
       <CardContent>
         <div className='pt-2'>
-          {transactions.map((t) => (
-            <Card className='p-3'>
-              <CardContent className='flex '>
-                <div className='text-lg'>Received</div>
-                <Badge
-                  className='ml-4 justify-start'
-                  variant={
-                    t.status === 'Success'
-                      ? 'default'
-                      : t.status === 'Failure'
-                        ? 'destructive'
-                        : 'secondary'
-                  }
-                >
-                  {t.status}
-                </Badge>
-                <div className=' ml-auto '>+ ₹ {t.amount / 100}</div>
-              </CardContent>
-              <div className='ml-5 text-slate-600 text-md'>
-                {t.time.toDateString()}
-              </div>
-            </Card>
-          ))}
+          {transactions
+            .slice(-3)
+            .reverse()
+            .map((t) => (
+              <Card className='py-3 my-2'>
+                <CardContent className='flex '>
+                  <div className='text-lg'>Received</div>
+                  <Badge
+                    className='ml-4 justify-start'
+                    variant={
+                      t.status === 'Success'
+                        ? 'default'
+                        : t.status === 'Failure'
+                          ? 'destructive'
+                          : 'secondary'
+                    }
+                  >
+                    {t.status}
+                  </Badge>
+                  <div className=' ml-auto '>+ ₹ {t.amount / 100}</div>
+                </CardContent>
+                <div className='ml-5 text-slate-600 text-md'>
+                  {t.time.toDateString()}
+                </div>
+              </Card>
+            ))}
+          <Link href='/transactions'>
+            <Button className='bg-transparent hover:bg-transparent border text-black dark:text-white w-full'>
+              All Transactions <MoveUpRight className='size-4 ml-1' />
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>

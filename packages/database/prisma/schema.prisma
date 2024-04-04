@@ -22,7 +22,7 @@ model User {
   OnRampTransaction OnRampTransaction[]
   Balance           Balance[]
   sentTransfers     p2pTransfer[]       @relation(name: "FromUserRelation")
-  receivedTransfers p2pTransfer[]       @relation(name: "ToUserRelation")
+  CreditedTransfers p2pTransfer[]       @relation(name: "ToUserRelation")
 }
 
 model Merchant {

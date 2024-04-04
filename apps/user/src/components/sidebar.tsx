@@ -1,4 +1,5 @@
 'use client';
+import { Button } from '@repo/ui/components/ui/button';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -17,7 +18,7 @@ export const SidebarItem = ({
 
   return (
     <div
-      className={`flex ${selected ? 'dark:text-gray-300 text-gray-800' : 'text-slate-500'} cursor-pointer  py-2`}
+      className={`flex mb-3 ${selected ? 'dark:text-gray-300 text-gray-800' : 'text-slate-500'} cursor-pointer  py-2`}
       onClick={() => {
         router.push(href);
       }}

@@ -11,7 +11,7 @@ export function AppbarClient() {
   return (
     <nav className='border-b border-gray-300'>
       <div className='max-w-7xl mx-auto'>
-              <Appbar
+        <Appbar
           name='Wallet App'
           onSignin={signIn}
           onSignout={async () => {

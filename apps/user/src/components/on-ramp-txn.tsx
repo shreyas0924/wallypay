@@ -41,7 +41,7 @@ export const OnRampTransactions = ({
             .map((t) => (
               <Card className='py-3 my-2'>
                 <CardContent className='flex '>
-                  <div className='text-lg'>Received</div>
+                  <div className='text-lg'>Credited</div>
                   <Badge
                     className='ml-4 justify-start'
                     variant={

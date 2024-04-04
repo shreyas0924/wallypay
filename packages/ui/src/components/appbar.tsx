@@ -37,7 +37,6 @@ export function Appbar({
 
       <div className='text-xl font-medium'>{name}</div>
       <div className='flex gap-4 ml-auto justify-center items-center align-middle'>
-        {userName && <h1>Welcome {userName}</h1>}
         <ModeToggle />
         <div className='flex flex-col justify-center'>
           <Button onClick={user ? onSignout : onSignin}>

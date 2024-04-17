@@ -38,7 +38,7 @@ export const OutgoingTransactions = ({
             <Card key={index} className='py-3 my-2'>
               <CardContent className='flex gap-2'>
                 <h1 className='text-lg'>Debited</h1>
-                <Badge>
+                <Badge variant={'secondary'}>
                   To : {t.toUserName ? t.toUserName : t.toUserNumber}
                 </Badge>
                 <div className='ml-auto'>

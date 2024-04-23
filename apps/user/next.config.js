@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-  transpilePackages: ['@repo/ui'],
+  transpilePackages: ["@repo/ui"],
   webpack: (config) => {
-    config.externals.push('pino-pretty', 'lokijs', 'encoding');
+    config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };

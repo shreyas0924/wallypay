@@ -76,7 +76,7 @@ export function Signin() {
               }}
             />
             {requiredError.phoneReq && (
-              <span className=" text-red-500">Phone is required</span>
+              <span className="text-red-500">Phone is required</span>
             )}
           </div>
           <div className="grid gap-2">

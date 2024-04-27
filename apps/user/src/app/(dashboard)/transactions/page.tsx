@@ -6,7 +6,8 @@ import { PrismaClient } from '@repo/database/client';
 import { OutgoingTransactions } from '../../../components/outgoing-txn';
 
 const prisma = new PrismaClient();
-type Transaction = {
+
+type OutgoingTransaction = {
   toUser: {
     number: string;
     name: string | null;
@@ -17,6 +18,27 @@ type Transaction = {
   fromUserId: number;
   toUserId: number;
 };
+
+type OnRampTransaction = {
+  id: number;
+  startTime: Date;
+  amount: number;
+  userId: number;
+  status: 'Success' | 'Failure' | 'Processing';
+};
+
+type P2PTransfer = {
+  id: number;
+  timestamp: Date;
+  amount: number;
+  fromUserId: number;
+  toUserId: number;
+  fromUser: {
+    name: string | null;
+    number: string;
+  };
+};
+
 async function getAddBalanceTransactions() {
   const session = await getServerSession(authOptions);
   const txns = await prisma.onRampTransaction.findMany({
@@ -25,7 +47,7 @@ async function getAddBalanceTransactions() {
       status: 'Success',
     },
   });
-  return txns.map((t) => ({
+  return txns.map((t: OnRampTransaction) => ({
     time: t.startTime,
     amount: t.amount,
     fromId: t.userId,
@@ -50,14 +72,14 @@ async function getP2PTransactionsIncoming() {
     },
   });
 
-  return txns.map((t) => {
+  return txns.map((t: P2PTransfer) => {
     return {
       time: t.timestamp,
       amount: Number(t.amount),
       fromId: t.fromUserId,
       toUserName: session?.user?.name,
       fromUserName: t.fromUser?.name ?? 'Unnamed',
-      fromUserNumber: t.fromUser.number,
+      fromUserNumber: t.fromUser?.number ?? '',
     };
   });
 }
@@ -78,7 +100,7 @@ async function getP2PTransactionsOutgoing() {
       },
     },
   });
-  return txns.map((t: Transaction) => {
+  return txns.map((t: OutgoingTransaction) => {
     return {
       time: t.timestamp,
       amount: t.amount,

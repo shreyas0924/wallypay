@@ -32,7 +32,14 @@ async function getBalance() {
   };
 }
 
- async function getOnRampTransactions() {
+interface OnRampTransaction {
+  time: Date;
+  amount: number;
+  status: string;
+  provider: string;
+}
+
+async function getOnRampTransactions() {
   const session = await getServerSession(authOptions);
   const txns = await prisma.onRampTransaction.findMany({
     where: {

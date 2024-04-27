@@ -4,7 +4,7 @@ import { authOptions } from '../../../lib/auth';
 import { AddMoney } from '../../../components/add-money-card';
 import { BalanceCard } from '../../../components/balance-card';
 import { OnRampTransactions } from '../../../components/on-ramp-txn';
-
+import type { OnRampTransaction } from '@repo/database/client';
 const prisma = new PrismaClient();
 
 async function getBalance() {
@@ -32,13 +32,6 @@ async function getBalance() {
   };
 }
 
-interface OnRampTransaction {
-  time: Date;
-  amount: number;
-  status: string;
-  provider: string;
-}
-
 async function getOnRampTransactions() {
   const session = await getServerSession(authOptions);
   const txns = await prisma.onRampTransaction.findMany({
@@ -46,7 +39,7 @@ async function getOnRampTransactions() {
       userId: Number(session?.user?.id),
     },
   });
-  return txns.map((t) => ({
+  return txns.map((t: OnRampTransaction) => ({
     time: t.startTime,
     amount: t.amount,
     status: t.status,

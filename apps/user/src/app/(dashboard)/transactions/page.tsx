@@ -1,18 +1,28 @@
-import React from "react";
-import { IncomingTransactions } from "../../../components/incoming-txn";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../../lib/auth";
-import { PrismaClient } from "@repo/database/client";
-import { OutgoingTransactions } from "../../../components/outgoing-txn";
+import React from 'react';
+import { IncomingTransactions } from '../../../components/incoming-txn';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../../lib/auth';
+import { PrismaClient } from '@repo/database/client';
+import { OutgoingTransactions } from '../../../components/outgoing-txn';
 
 const prisma = new PrismaClient();
-
+type Transaction = {
+  toUser: {
+    number: string;
+    name: string | null;
+  };
+  id: number;
+  amount: number;
+  timestamp: Date;
+  fromUserId: number;
+  toUserId: number;
+};
 async function getAddBalanceTransactions() {
   const session = await getServerSession(authOptions);
   const txns = await prisma.onRampTransaction.findMany({
     where: {
       userId: Number(session?.user?.id),
-      status: "Success",
+      status: 'Success',
     },
   });
   return txns.map((t) => ({
@@ -46,7 +56,7 @@ async function getP2PTransactionsIncoming() {
       amount: Number(t.amount),
       fromId: t.fromUserId,
       toUserName: session?.user?.name,
-      fromUserName: t.fromUser?.name ?? "Unnamed",
+      fromUserName: t.fromUser?.name ?? 'Unnamed',
       fromUserNumber: t.fromUser.number,
     };
   });
@@ -68,11 +78,11 @@ async function getP2PTransactionsOutgoing() {
       },
     },
   });
-  return txns.map((t: any) => {
+  return txns.map((t: Transaction) => {
     return {
       time: t.timestamp,
       amount: t.amount,
-      toUserName: t.toUser.name ?? "",
+      toUserName: t.toUser.name ?? '',
       toUserNumber: t.toUser.number,
     };
   });
@@ -80,7 +90,7 @@ async function getP2PTransactionsOutgoing() {
 
 const Transactions = async () => {
   return (
-    <div className="w-full flex flex-wrap ">
+    <div className='w-full flex flex-wrap '>
       <IncomingTransactions
         addBalanceTxn={await getAddBalanceTransactions()}
         p2pTxn={await getP2PTransactionsIncoming()}

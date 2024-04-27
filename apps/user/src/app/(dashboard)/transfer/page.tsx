@@ -4,7 +4,8 @@ import { authOptions } from '../../../lib/auth';
 import { AddMoney } from '../../../components/add-money-card';
 import { BalanceCard } from '../../../components/balance-card';
 import { OnRampTransactions } from '../../../components/on-ramp-txn';
-import type { OnRampTransaction } from '@repo/database/client';
+import { OnRampTransaction } from '@repo/database/client';
+
 const prisma = new PrismaClient();
 
 async function getBalance() {

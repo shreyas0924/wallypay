@@ -59,7 +59,7 @@ export const AddMoney = () => {
             <SelectValue placeholder='Select Bank' />
           </SelectTrigger>
           <SelectContent
-            onSelect={(value: string) => {
+            onSelect={(value: any) => {
               setRedirectUrl(
                 SUPPORTED_BANKS.find((x) => x.name === value)?.redirectUrl || ''
               );

@@ -2,6 +2,9 @@
   "name": "@repo/database",
   "version": "0.0.0",
   "type": "module",
+  "scripts": {
+    "postinstall": "pnpm dlx prisma generate"
+  },
   "dependencies": {
     "@prisma/client": "^6.8.2",
     "bcrypt": "^5.1.1"

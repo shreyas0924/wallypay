@@ -52,6 +52,7 @@ model OnRampTransaction {
   startTime DateTime
   userId    Int
   user      User         @relation(fields: [userId], references: [id])
+  bankAccountId   Int?
 }
 
 model Balance {

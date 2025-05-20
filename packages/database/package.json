@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
-    "@repo/database": "file:",
     "bcrypt": "^5.1.1"
   },
   "devDependencies": {

@@ -1,38 +1,45 @@
 "use client";
-import { Button } from "@repo/ui/components/ui/button";
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { toast } from "sonner";
-import { Label } from "@repo/ui/components/ui/label";
+import Link from "next/link";
+
+import { Button } from "@repo/ui/components/ui/button";
 import { Input } from "@repo/ui/components/ui/input";
+import { Label } from "@repo/ui/components/ui/label";
 import {
   Card,
-  CardHeader,
   CardContent,
   CardDescription,
+  CardFooter,
+  CardHeader,
   CardTitle,
 } from "@repo/ui/components/ui/card";
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import { signIn } from "next-auth/react";
+import { Wallet, Github, Mail, ArrowRight } from "lucide-react";
+
 export function Signin() {
   const router = useRouter();
   const phone = useRef("");
   const password = useRef("");
+  const [isLoading, setIsLoading] = useState(false);
   const [requiredError, setRequiredError] = useState({
     phoneReq: false,
     passReq: false,
   });
-  const handleSubmit = async (e?: React.FormEvent<HTMLButtonElement>) => {
-    if (e) {
-      e.preventDefault();
-    }
+
+  const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
 
     if (!phone.current || !password.current) {
       setRequiredError({
-        phoneReq: phone.current ? false : true,
-        passReq: password.current ? false : true,
+        phoneReq: !phone.current,
+        passReq: !password.current,
       });
       return;
     }
+
+    setIsLoading(true);
 
     const res = await signIn("credentials", {
       phone: phone.current,
@@ -40,10 +47,12 @@ export function Signin() {
       redirect: false,
     });
 
+    setIsLoading(false);
+
     if (!res?.error) {
       router.push("/");
     } else {
-      toast("Error Signing in", {
+      toast("Error signing in", {
         action: {
           label: "Close",
           onClick: () => toast.dismiss(),
@@ -51,61 +60,69 @@ export function Signin() {
       });
     }
   };
+
   return (
-    <Card className="mx-auto mt-4 h-full my-auto max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Sign Up</CardTitle>
-        <CardDescription>
-          Enter your information to create an account
-        </CardDescription>
+    <Card className="w-full max-w-lg shadow-lg">
+      <CardHeader className="space-y-2 text-center">
+        <div className="flex justify-center mb-2">
+          <div className=" p-3 rounded-full">
+            <Wallet className="h-6 w-6" />
+          </div>
+        </div>
+        <CardTitle className="text-2xl font-bold">WallyPay</CardTitle>
+        <CardDescription>Sign in to access your wallet</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
+      <CardContent className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
             <Label htmlFor="phone">Phone Number</Label>
             <Input
-              name="phone"
               id="phone"
-              placeholder="1111111111"
               onChange={(e) => {
-                setRequiredError((prevState) => ({
-                  ...prevState,
-                  phoneReq: false,
-                }));
+                setRequiredError((prev) => ({ ...prev, phoneReq: false }));
                 phone.current = e.target.value;
               }}
             />
             {requiredError.phoneReq && (
-              <span className="text-red-500">Phone is required</span>
+              <span className="text-red-500 text-sm">Phone is required</span>
             )}
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">Password</Label>
+              
+            </div>
             <Input
-              className="border-0"
-              name="password"
-              type={"password"}
               id="password"
-              placeholder="••••••••"
+              type="password"
               onChange={(e) => {
-                setRequiredError((prevState) => ({
-                  ...prevState,
-                  passReq: false,
-                }));
+                setRequiredError((prev) => ({ ...prev, passReq: false }));
                 password.current = e.target.value;
               }}
-              onKeyDown={async (e) => {
-                if (e.key === "Enter") {
-                  handleSubmit();
-                }
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSubmit();
               }}
             />
+            {requiredError.passReq && (
+              <span className="text-red-500 text-sm">Password is required</span>
+            )}
           </div>
-          <Button type="submit" className="w-full" onClick={handleSubmit}>
-            Sign In
+         
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? "Signing in..." : "Sign in"}
+            {!isLoading && <ArrowRight className="ml-2 h-4 w-4" />}
           </Button>
-        </div>
+        </form>
+
+
+
+
       </CardContent>
+    
     </Card>
   );
 }

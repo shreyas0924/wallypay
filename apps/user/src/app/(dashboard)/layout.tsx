@@ -6,15 +6,10 @@ export default function Layout({
   children: React.ReactNode;
 }): JSX.Element {
   return (
-    <div className='flex '>
+    <div className='flex max-w-7xl mx-auto'>
       <div className='min-w-60 border-r border-slate-300 min-h-screen mr-4 pt-8'>
         <div>
           <SidebarItem href={'/dashboard'} icon={<HomeIcon />} title='Home' />
-          <SidebarItem
-            href={'/transfer'}
-            icon={<TransferIcon />}
-            title='Transfer'
-          />
           <SidebarItem
             href={'/transactions'}
             icon={<TransactionsIcon />}

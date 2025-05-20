@@ -19,7 +19,7 @@ import { TextInput } from '@repo/ui/components/ui/TextInput';
 import { useState } from 'react';
 import { createOnRampTransaction } from '../lib/actions/createOnRampTxn';
 
-const WEBHOOK_URL = 'http://localhost:3003';
+const WEBHOOK_URL = process.env.WEBHOOK_URL 
 const SUPPORTED_BANKS = [
   {
     name: 'HDFC Bank',
@@ -27,7 +27,7 @@ const SUPPORTED_BANKS = [
   },
   {
     name: 'Axis Bank',
-    redirectUrl: 'https://www.axisbank.com/',
+    redirectUrl:  `${WEBHOOK_URL}/axisWebhook`,
   },
 ];
 

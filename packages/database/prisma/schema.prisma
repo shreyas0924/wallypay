@@ -21,6 +21,7 @@ model User {
   password          String
   OnRampTransaction OnRampTransaction[]
   Balance           Balance[]
+   bankAccounts      BankAccount[] 
   sentTransfers     p2pTransfer[]       @relation(name: "FromUserRelation")
   CreditedTransfers p2pTransfer[]       @relation(name: "ToUserRelation")
 }
@@ -60,7 +61,15 @@ model Balance {
   locked Int
   user   User @relation(fields: [userId], references: [id])
 }
-
+model BankAccount {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+  provider      String   // e.g., 'HDFC Bank'
+  accountNumber String
+  ifsc          String
+  createdAt     DateTime @default(now())
+}
 enum AuthType {
   Google
   Github

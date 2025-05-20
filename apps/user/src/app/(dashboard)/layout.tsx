@@ -20,6 +20,11 @@ export default function Layout({
             icon={<P2PTransferIcon />}
             title='P2P Transfer'
           />
+          <SidebarItem
+            href={'/accounts'}
+            icon={<P2PTransferIcon />}
+            title='Bank Accounts'
+          />
         </div>
       </div>
       {children}

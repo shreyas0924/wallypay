@@ -3,17 +3,22 @@ import { PrismaClient } from '@repo/database/client';
 const app = express();
 const db = new PrismaClient();
 app.use(express.json());
-app.post('/hdfcWebhook', async (req, res) => {
-  //TODO: Add zod validation here?
-  //TODO: HDFC bank should ideally send us a secret so we know this is sent by them
+
+
+app.post('/bankWebhook', async (req, res) => {
+  // Use a generic webhook endpoint
   const paymentInformation: {
     token: string;
     userId: string;
     amount: string;
+    selectedAccountId?: string; 
+    provider?: string;
   } = {
     token: req.body.token,
     userId: req.body.user_identifier,
     amount: req.body.amount,
+    selectedAccountId: req.body.selectedAccountId,
+    provider: req.body.provider,
   };
 
   try {
@@ -24,7 +29,6 @@ app.post('/hdfcWebhook', async (req, res) => {
         },
         data: {
           amount: {
-            // You can also get this from your DB
             increment: Number(paymentInformation.amount),
           },
         },
@@ -35,6 +39,9 @@ app.post('/hdfcWebhook', async (req, res) => {
         },
         data: {
           status: 'Success',
+          provider: paymentInformation.provider,
+          // Optionally store bankAccountId if you add it to the schema
+          ...(paymentInformation.selectedAccountId && { bankAccountId: Number(paymentInformation.selectedAccountId) }),
         },
       }),
     ]);

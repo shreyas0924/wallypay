@@ -16,27 +16,28 @@ import {
   SelectValue,
 } from '@repo/ui/components/ui/select-shad';
 import { TextInput } from '@repo/ui/components/ui/TextInput';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createOnRampTransaction } from '../lib/actions/createOnRampTxn';
 
-const WEBHOOK_URL = process.env.WEBHOOK_URL 
-const SUPPORTED_BANKS = [
-  {
-    name: 'HDFC Bank',
-    redirectUrl: `${WEBHOOK_URL}/hdfcWebhook`,
-  },
-  {
-    name: 'Axis Bank',
-    redirectUrl:  `${WEBHOOK_URL}/axisWebhook`,
-  },
-];
-
 export const AddMoney = () => {
-  const [redirectUrl, setRedirectUrl] = useState(
-    SUPPORTED_BANKS[0]?.redirectUrl
-  );
-  const [provider, setProvider] = useState(SUPPORTED_BANKS[0]?.name || '');
+  const [bankAccounts, setBankAccounts] = useState<any[]>([]);
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
+  const [provider, setProvider] = useState('');
   const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    // Fetch user's bank accounts from API
+    fetch('/api/bank-account')
+      .then(res => res.json())
+      .then(data => {
+        setBankAccounts(data);
+        if (data.length > 0) {
+          setSelectedAccountId(data[0].id.toString());
+          setProvider(data[0].provider);
+        }
+      });
+  }, []);
+
   return (
     <Card title='Add Money'>
       <CardHeader>
@@ -53,25 +54,22 @@ export const AddMoney = () => {
         />
       </CardContent>
       <CardContent>
-        <div className='text-left'>Bank</div>
+        <div className='text-left'>Bank Account</div>
         <SelectShad>
-          <SelectTrigger className='w-[180px]'>
-            <SelectValue placeholder='Select Bank' />
+          <SelectTrigger className='w-[250px]'>
+            <SelectValue placeholder='Select Bank Account' />
           </SelectTrigger>
           <SelectContent
             onSelect={(value: any) => {
-              setRedirectUrl(
-                SUPPORTED_BANKS.find((x) => x.name === value)?.redirectUrl || ''
-              );
-              setProvider(
-                SUPPORTED_BANKS.find((x) => x.name === value)?.name || ''
-              );
+              const account = bankAccounts.find((x) => x.id.toString() === value);
+              setSelectedAccountId(value);
+              setProvider(account?.provider || '');
             }}
           >
             <SelectGroup>
-              {SUPPORTED_BANKS.map((x) => (
-                <SelectItem key={x.name} value={x.name}>
-                  {x.name}
+              {bankAccounts.map((x) => (
+                <SelectItem key={x.id} value={x.id.toString()}>
+                  {x.provider} - {x.accountNumber.slice(-4)} 
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -81,7 +79,8 @@ export const AddMoney = () => {
       <CardFooter>
         <Button
           onClick={async () => {
-            await createOnRampTransaction(provider, value, redirectUrl);
+            if (!selectedAccountId) return;
+            await createOnRampTransaction(provider, value, selectedAccountId);
           }}
         >
           Add Money

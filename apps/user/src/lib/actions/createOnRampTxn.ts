@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 export async function createOnRampTransaction(
   provider: string,
   amount: number,
-  redirectUrl: string
+  selectedAccountId: string
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user || !session.user?.id) {
@@ -31,10 +31,12 @@ export async function createOnRampTransaction(
   });
 
   try {
-    await axios.post(redirectUrl, {
+    await axios.post(`${process.env.WEBHOOK_URL}/bankWebhook`, {
       token: token,
       user_identifier: session.user.id,
       amount: (amount * 100).toString(),
+      selectedAccountId: selectedAccountId,
+      provider: provider
     });
   } catch (error) {
     console.error('Error triggering webhook:', error);

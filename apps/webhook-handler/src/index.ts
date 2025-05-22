@@ -1,12 +1,12 @@
 import express from 'express';
 import { PrismaClient } from '@repo/database/client';
+import cron from 'node-cron';
 const app = express();
 const db = new PrismaClient();
 app.use(express.json());
 
 
 app.post('/bankWebhook', async (req, res) => {
-  // Use a generic webhook endpoint
   const paymentInformation: {
     token: string;
     userId: string;
@@ -40,7 +40,6 @@ app.post('/bankWebhook', async (req, res) => {
         data: {
           status: 'Success',
           provider: paymentInformation.provider,
-          // Optionally store bankAccountId if you add it to the schema
           ...(paymentInformation.selectedAccountId && { bankAccountId: Number(paymentInformation.selectedAccountId) }),
         },
       }),
@@ -54,6 +53,44 @@ app.post('/bankWebhook', async (req, res) => {
     res.status(411).json({
       message: 'Error while processing webhook',
     });
+  }
+});
+
+cron.schedule('*/120 * * * *', async () => {
+  try {
+    const processingTxns = await db.onRampTransaction.findMany({
+      where: { status: 'Processing' },
+    });
+    if (processingTxns.length > 0) {
+      console.log(`Found ${processingTxns.length} processing transaction(s). Retrying...`);
+      for (const txn of processingTxns) {
+        try {
+          await db.$transaction([
+            db.balance.updateMany({
+              where: { userId: txn.userId },
+              data: {
+                amount: { increment: txn.amount },
+              },
+            }),
+            db.onRampTransaction.updateMany({
+              where: { token: txn.token },
+              data: {
+                status: 'Success',
+                provider: txn.provider,
+                ...(txn.bankAccountId && { bankAccountId: txn.bankAccountId }),
+              },
+            }),
+          ]);
+          console.log(`Retried txn ${txn.token} successfully`);
+        } catch (err) {
+          console.error(`Retry failed for txn ${txn.token}:`, err);
+        }
+      }
+    } else {
+      console.log("No processing transactions to retry");
+    }
+  } catch (e) {
+    console.error("Error checking processing transactions:", e);
   }
 });
 

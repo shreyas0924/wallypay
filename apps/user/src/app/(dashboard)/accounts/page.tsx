@@ -17,7 +17,7 @@ import {
   DialogTrigger,
 } from "@repo/ui/components/ui/dialog";
 import { Toaster } from "@repo/ui/components/ui/toaster";
-import {useToast}  from "@repo/ui/components/ui/use-toast";
+import { useToast } from "@repo/ui/components/ui/use-toast";
 
 export default function AccountsPage() {
   const [accounts, setAccounts] = useState<any[]>([]);
@@ -27,7 +27,7 @@ export default function AccountsPage() {
   const [loading, setLoading] = useState(false);
   const [loadingAccounts, setLoadingAccounts] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-const { toast } = useToast()
+  const { toast } = useToast();
   // Fetch bank accounts from API
   const fetchAccounts = async () => {
     setLoadingAccounts(true);
@@ -61,7 +61,7 @@ const { toast } = useToast()
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="w-full my-6 space-y-6">
       <div className="flex justify-between  items-center">
         <h2 className="text-3xl font-bold">Your Bank Accounts</h2>
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
@@ -74,7 +74,10 @@ const { toast } = useToast()
             </DialogHeader>
             <form onSubmit={addAccount} className="space-y-4 mt-4">
               <div className="grid gap-2">
-                <label htmlFor="provider" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="provider"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Bank Name
                 </label>
                 <Input
@@ -86,7 +89,10 @@ const { toast } = useToast()
                 />
               </div>
               <div className="grid gap-2">
-                <label htmlFor="accountNumber" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="accountNumber"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Account Number
                 </label>
                 <Input
@@ -98,7 +104,10 @@ const { toast } = useToast()
                 />
               </div>
               <div className="grid gap-2">
-                <label htmlFor="ifsc" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="ifsc"
+                  className="text-sm font-medium text-gray-700"
+                >
                   IFSC Code
                 </label>
                 <Input
@@ -116,25 +125,26 @@ const { toast } = useToast()
           </DialogContent>
         </Dialog>
       </div>
-
-      {loadingAccounts ? (
-        <div className="flex justify-center items-center h-40">
-          <span>Loading accounts...</span>
+        {loadingAccounts ? (
+          <div className="flex justify-center items-center h-40">
+            <span>Loading accounts...</span>
+          </div>
+        ) : (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 py-4">
+          {accounts.map((acc) => (
+            <Card key={acc.id} className="p-2">
+              <CardHeader>
+                <CardTitle className="text-2xl">{acc.provider}</CardTitle>
+                <CardDescription className="text-lg">
+                  Account Number: {acc.accountNumber}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-xl">IFSC Code: {acc.ifsc}</div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      ) : (
-        accounts.map((acc) => (
-          <Card key={acc.id} className="p-6">
-            <CardHeader>
-              <CardTitle className="text-2xl">{acc.provider}</CardTitle>
-              <CardDescription className="text-lg">
-                Account Number: {acc.accountNumber}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl">IFSC Code: {acc.ifsc}</div>
-            </CardContent>
-          </Card>
-        ))
       )}
       <Toaster />
     </div>

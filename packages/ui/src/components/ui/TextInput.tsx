@@ -10,8 +10,9 @@ export const TextInput = ({
   placeholder: string;
   onChange: (value: string) => void;
   label: string;
-  type?: 'text' | 'number' | 'password';
+  type?: 'text' | 'number' | 'password' | 'email';
   value?: any;
+  required?: boolean;
 }) => {
   return (
     <div className='pt-2'>
@@ -23,6 +24,7 @@ export const TextInput = ({
         id='first_name'
         className='border border-gray-300 bg-transparent focus:bg-transparent  text-sm rounded-lg block w-full p-2.5'
         placeholder={placeholder}
+        required
       />
     </div>
   );

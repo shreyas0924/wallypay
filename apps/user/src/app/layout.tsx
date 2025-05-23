@@ -2,13 +2,7 @@ import "@repo/ui/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
-import { AppbarClient } from "../components/appbar";
-import {
-  SidebarProvider,
-  SidebarTrigger,
-} from "@repo/ui/components/ui/sidebar";
-import { AppSidebar } from "../components/app-sidebar";
-import { Navbar } from "../components/navbar";
+import { LayoutWrapper } from "../components/layout-wrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,17 +20,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
-          <SidebarProvider>
-            <div className="flex min-h-screen w-full">
-              <AppSidebar />
-              <div className="flex-1 w-full">
-                <Navbar />
-                <main className="container mx-auto max-w-full p-4">
-                  {children}
-                </main>
-              </div>
-            </div>
-          </SidebarProvider>
+          <LayoutWrapper>{children}</LayoutWrapper>
         </Providers>
       </body>
     </html>

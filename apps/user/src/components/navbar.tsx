@@ -23,10 +23,10 @@ export function Navbar() {
       <div className="flex h-12 items-center gap-4 px-4 w-full">
         <SidebarTrigger />
         <div className="flex flex-1">
-          <Breadcrumbs
+          {/* <Breadcrumbs
             items={getBreadcrumbs()}
             separator={<ChevronRight className="h-4 w-4" />}
-          />
+          /> */}
         </div>
       </div>
     </nav>
